@@ -1,13 +1,14 @@
-﻿using MarketPlace.Models.DTO;
+﻿using MarketPlace.Models;
+using MarketPlace.Models.DTO;
 
 namespace MarketPlace.Repositories.Abstract
 {
     public interface IProductRepository
     {
-        Task<ProductDTO> GetAllAsync(ProductDTO productDTO);
-        Task<ProductDTO> GetByIdAsync(Guid id);
-        Task<ProductDTO> CreateAsync(ProductDTO productDTO);
-        Task<ProductDTO> UpdateAsync(Guid id);
-        Task<ProductDTO> DeleteAsync(Guid id);
+        Task<IEnumerable<Product>> GetAllAsync();
+        Task<Product> GetByIdAsync(Guid id);
+        Task<Product> CreateAsync(Product Product);
+        Task<Product> UpdateAsync(Product product);
+        Task<bool> DeleteAsync(string name);
     }
 }

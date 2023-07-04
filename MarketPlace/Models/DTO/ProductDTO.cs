@@ -9,6 +9,6 @@ namespace MarketPlace.Models.DTO
         public decimal Price { get; set; }
 
         [NotMapped]
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

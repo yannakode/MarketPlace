@@ -1,6 +1,8 @@
 ﻿using MarketPlace.Data;
+using MarketPlace.Models;
 using MarketPlace.Models.DTO;
 using MarketPlace.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarketPlace.Repositories.Implementations
 {
@@ -13,29 +15,55 @@ namespace MarketPlace.Repositories.Implementations
             _appDbContext = appDbContext;
         }
 
-        public async Task<ProductDTO> GetAllAsync(ProductDTO productDTO)
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _appDbContext.Products.ToListAsync();
         }
 
-        public async Task<ProductDTO> CreateAsync(ProductDTO productDTO)
+        public async Task<Product> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var Product = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+            
+            return Product;
         }
 
-        public async Task<ProductDTO> DeleteAsync(Guid id)
+        public async Task<Product> CreateAsync(Product product)
         {
-            throw new NotImplementedException();
+            var newProduct = await _appDbContext.AddAsync(product);
+
+            await _appDbContext.SaveChangesAsync();
+
+            return product;
         }
 
-        public async Task<ProductDTO> GetByIdAsync(Guid id)
+        public async Task<bool> DeleteAsync(string name)
         {
-            throw new NotImplementedException();
+            var productToRemove = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Name == name);
+
+            if(productToRemove == null)
+            {
+                return false;
+            }
+
+            _appDbContext.Products.Remove(productToRemove);
+            await _appDbContext.SaveChangesAsync();
+
+
+            return true;
         }
 
-        public async Task<ProductDTO> UpdateAsync(Guid id)
+        public async Task<Product> UpdateAsync(Product product)
         {
-            throw new NotImplementedException();
+            var productToUpdate = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Name ==  product.Name);
+
+            productToUpdate.Name = product.Name;
+            productToUpdate.Description = product.Description;
+            productToUpdate.Price = product.Price;
+
+            _appDbContext.Update(productToUpdate);
+            await _appDbContext.SaveChangesAsync();
+
+            return productToUpdate;
         }
     }
 }
